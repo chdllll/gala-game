@@ -21,7 +21,7 @@ android.allow_backup = False
 android.windowsoftinputmode = adjustResize
 android.skip_update = False
 
-android.p4a_whitelist = lib/python*/site-packages/aiohttp/*.so,lib/python*/site-packages/multidict/*.so,lib/python*/site-packages/yarl/*.so,lib/python*/site-packages/frozenlist/*.so,lib/python*/site-packages/propcache/*.so
+android.p4a_whitelist = lib/python*/site-packages/aiohttp/*.so,lib/python*/site-packages/multidict/*.so,lib/python*/site-packages/yarl/*.so,lib/python*/site-packages/frozenlist/*.so,lib/python*/site-packages/propcache/*.so,lib/python*/site-packages/charset_normalizer/*.so,lib/python*/site-packages/aiosignal/*.so,lib/python*/site-packages/aiohappyeyeballs/*.so
 
 p4a.bootstrap = sdl2
 p4a.branch = master
