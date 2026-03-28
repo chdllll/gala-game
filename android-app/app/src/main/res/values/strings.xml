@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">旮旯GAME</string>
+    <string-array name="gender_array">
+        <item>女性</item>
+        <item>男性</item>
+        <item>其他</item>
+    </string-array>
+</resources>

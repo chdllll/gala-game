@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旮旯GAME - 完整UI预览</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 400px;
+            height: 880px;
+            background: #f2f2f5;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 25px;
+            background: #1a1a2e;
+            border-radius: 15px;
+            z-index: 100;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: none;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 12px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-btn {
+            background: none;
+            border: none;
+            color: #3366cc;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 6px;
+        }
+
+        .header-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .header-menu-btn {
+            background: #3366cc;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .world-list {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+        }
+
+        .world-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+
+        .world-card:active {
+            background: rgba(240, 240, 240, 0.95);
+        }
+
+        .world-card h3 {
+            font-size: 14px;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+        .world-card p {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .world-card .enter {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #3366cc;
+            font-size: 11px;
+        }
+
+        .world-card .hint {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 9px;
+        }
+
+        .fab {
+            position: absolute;
+            bottom: 30px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background: #3366cc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(51, 102, 204, 0.4);
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: none;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+        }
+
+        .game-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 6px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .time-row {
+            background: rgba(248, 248, 248, 0.9);
+            padding: 3px 12px;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .view-row {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3px 12px 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .view-label {
+            font-size: 12px;
+            color: #666;
+            width: 45px;
+        }
+
+        .view-spinner {
+            flex: 1;
+            padding: 6px 10px;
+            background: rgba(245, 245, 245, 0.9);
+            border-radius: 6px;
+            font-size: 11px;
+            color: #1a1a1a;
+            border: none;
+            cursor: pointer;
+        }
+
+        .speaker-row {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 12px 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 8px 12px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .chat-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="80">🏰</text></svg>') center/cover;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .character-portrait {
+            position: absolute;
+            bottom: 0;
+            width: 100px;
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 0;
+            cursor: pointer;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+        }
+
+        .character-portrait:hover {
+            opacity: 1;
+        }
+
+        .character-portrait.left {
+            left: 0;
+        }
+
+        .character-portrait.right {
+            right: 0;
+        }
+
+        .message-group {
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        .message-group.user {
+            align-items: flex-end;
+        }
+
+        .message-group.character {
+            align-items: flex-start;
+        }
+
+        .avatar-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 2px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #5588ee, #3366cc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .avatar.on-call {
+            background: linear-gradient(135deg, #ff9933, #ff6600);
+        }
+
+        .char-name {
+            font-size: 12px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .char-name.on-call {
+            color: #ff6600;
+        }
+
+        .message-bubble {
+            max-width: 280px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.75);
+            border: 1.5px solid rgba(80, 80, 80, 0.4);
+            position: relative;
+            backdrop-filter: blur(2px);
+        }
+
+        .message-bubble.user {
+            background: rgba(51, 102, 204, 0.75);
+            border: 1.5px solid rgba(80, 80, 80, 0.4);
+            color: white;
+        }
+
+        .message-bubble .action {
+            color: #4D66B3;
+            font-style: italic;
+            font-size: 12px;
+        }
+
+        .message-bubble .thought {
+            color: #806699;
+            font-style: italic;
+            font-size: 12px;
+        }
+
+        .message-bubble div {
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .rewind-btn {
+            position: absolute;
+            right: -55px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .message-group:hover .rewind-btn {
+            display: block;
+        }
+
+        .input-area {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 10px 14px;
+            border: none;
+            background: rgba(242, 242, 245, 0.9);
+            border-radius: 20px;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .input-area button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .send-btn {
+            background: #3366cc;
+            color: white;
+        }
+
+        .listen-btn {
+            background: #cc3333;
+            color: white;
+        }
+
+        .menu-list {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .menu-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .edit-content {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+        }
+
+        .edit-section {
+            margin-bottom: 12px;
+        }
+
+        .edit-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 12px;
+            background: rgba(248, 248, 248, 0.9);
+            resize: none;
+        }
+
+        .edit-map {
+            width: 100%;
+            height: 80px;
+            background: rgba(248, 248, 248, 0.9);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .manage-item {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .manage-item span {
+            font-size: 14px;
+            color: #1a1a1a;
+        }
+
+        .manage-item .arrow {
+            color: #999;
+        }
+
+        .save-btn {
+            background: #3366cc;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 12px;
+        }
+
+        .location-content {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+        }
+
+        .location-section {
+            margin-bottom: 12px;
+        }
+
+        .location-spinner {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 12px;
+            background: rgba(248, 248, 248, 0.9);
+        }
+
+        .move-btn {
+            background: #3366cc;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .call-list {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+        }
+
+        .call-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .call-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .call-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #ff9933, #ff6600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .call-info h4 {
+            font-size: 14px;
+            color: #1a1a1a;
+        }
+
+        .call-info p {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .call-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .call-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .call-btn.accept {
+            background: #33cc66;
+            color: white;
+        }
+
+        .call-btn.reject {
+            background: #cc3333;
+            color: white;
+        }
+
+        .call-btn.end {
+            background: #cc3333;
+            color: white;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 10px 16px;
+            background: #3366cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .nav-btn:hover {
+            background: #2855aa;
+        }
+
+        .nav-btn.active {
+            background: #cc3333;
+        }
+
+        .label {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        .toast {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .toast.show {
+            display: block;
+            animation: fadeInOut 2s;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="label">完整UI预览 - 点击右侧按钮切换界面<br><small>长按世界卡片进入编辑，短按进入游戏</small></div>
+    <div class="nav-buttons">
+        <button class="nav-btn active" onclick="showScreen('main')">主界面</button>
+        <button class="nav-btn" onclick="showScreen('game')">游戏界面</button>
+        <button class="nav-btn" onclick="showScreen('menu')">菜单界面</button>
+        <button class="nav-btn" onclick="showScreen('edit')">世界编辑</button>
+        <button class="nav-btn" onclick="showScreen('char-manage')">角色管理</button>
+        <button class="nav-btn" onclick="showScreen('loc-manage')">位置管理</button>
+        <button class="nav-btn" onclick="showScreen('memory')">世界记忆</button>
+        <button class="nav-btn" onclick="showScreen('call')">通话管理</button>
+    </div>
+
+    <div class="phone-frame">
+        <div class="screen active" id="main-screen">
+            <div class="header">
+                <div style="width: 45px;"></div>
+                <div class="header-title" style="color: #3366cc; font-size: 18px;">旮旯GAME</div>
+                <button class="header-btn" style="background: #3366cc; color: white; padding: 5px 10px; border-radius: 4px; font-size: 11px;" onclick="showScreen('settings')">设置</button>
+            </div>
+            <div class="world-list">
+                <div class="world-card" data-id="1">
+                    <h3>魔法王国</h3>
+                    <p>一个充满魔法与奇迹的奇幻世界</p>
+                    <span class="hint">长按编辑</span>
+                    <span class="enter">进入 ></span>
+                </div>
+                <div class="world-card" data-id="2">
+                    <h3>赛博朋克城市</h3>
+                    <p>霓虹灯下的未来都市冒险</p>
+                    <span class="hint">长按编辑</span>
+                    <span class="enter">进入 ></span>
+                </div>
+                <div class="world-card" data-id="3">
+                    <h3>末日废土</h3>
+                    <p>在废墟中寻找生存的希望</p>
+                    <span class="hint">长按编辑</span>
+                    <span class="enter">进入 ></span>
+                </div>
+                <div class="world-card" data-id="4">
+                    <h3>武侠江湖</h3>
+                    <p>刀光剑影，快意恩仇</p>
+                    <span class="hint">长按编辑</span>
+                    <span class="enter">进入 ></span>
+                </div>
+            </div>
+            <button class="fab" onclick="showScreen('edit')">+</button>
+        </div>
+
+        <div class="screen" id="game-screen">
+            <div class="game-header">
+                <button class="header-btn" onclick="showScreen('main')">< 返回</button>
+                <div class="header-title">魔法王国</div>
+                <button class="header-menu-btn" onclick="showScreen('menu')">菜单</button>
+            </div>
+            <div class="time-row">2024-01-01 08:00</div>
+            <div class="view-row">
+                <span class="view-label">视角:</span>
+                <select class="view-spinner">
+                    <option>【王都】</option>
+                    <option>  └ 魔法学院</option>
+                    <option>  └ 商业街</option>
+                    <option>【森林】</option>
+                    <option>  └ 精灵村落</option>
+                </select>
+            </div>
+            <div class="speaker-row">
+                <span class="view-label">发言:</span>
+                <select class="view-spinner">
+                    <option>自动选择 (艾莉丝)</option>
+                    <option>艾莉丝 (活跃度: 80)</option>
+                    <option>卡尔 (活跃度: 60) 📞</option>
+                    <option>梅林 (活跃度: 40)</option>
+                </select>
+            </div>
+            <div class="chat-area">
+                <div class="character-portrait left" onclick="showScreen('char-edit')">
+                    <div style="font-size: 80px;">🧙‍♀️</div>
+                </div>
+                <div class="character-portrait right" onclick="showScreen('char-edit')">
+                    <div style="font-size: 80px;">🧙‍♂️</div>
+                </div>
+                <div class="message-group character">
+                    <div class="avatar-row">
+                        <div class="avatar" data-char-id="1">艾</div>
+                        <span class="char-name">艾莉丝</span>
+                    </div>
+                    <div class="message-bubble">
+                        <div>欢迎来到魔法王国！我是艾莉丝，很高兴见到你。</div>
+                        <button class="rewind-btn">回溯</button>
+                    </div>
+                </div>
+                <div class="message-group character">
+                    <div class="avatar-row">
+                        <div class="avatar on-call" data-char-id="2">卡</div>
+                        <span class="char-name on-call">卡尔 📞</span>
+                    </div>
+                    <div class="message-bubble">
+                        <div class="action">【动作】卡尔从远处走来</div>
+                        <div>嘿！听说你是新来的？</div>
+                        <button class="rewind-btn">回溯</button>
+                    </div>
+                </div>
+                <div class="message-group user">
+                    <div class="message-bubble user">
+                        <div>我想去魔法学院看看</div>
+                        <button class="rewind-btn" style="left: -55px; right: auto;">回溯</button>
+                    </div>
+                </div>
+                <div class="message-group character">
+                    <div class="avatar-row">
+                        <div class="avatar" data-char-id="3">梅</div>
+                        <span class="char-name">梅林</span>
+                    </div>
+                    <div class="message-bubble">
+                        <div class="thought">【心声】这个年轻人似乎很有潜力...</div>
+                        <div>魔法学院就在东边，我可以带你去。</div>
+                        <button class="rewind-btn">回溯</button>
+                    </div>
+                </div>
+            </div>
+            <div class="input-area">
+                <input type="text" placeholder="输入消息...">
+                <button class="send-btn">发送</button>
+                <button class="listen-btn">聆听</button>
+            </div>
+        </div>
+
+        <div class="screen" id="menu-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('game')">< 返回聊天</button>
+                <div class="header-title">功能菜单</div>
+                <div style="width: 70px;"></div>
+            </div>
+            <div class="menu-list">
+                <div class="menu-item" onclick="showToast('已重置对话')">
+                    <div class="menu-icon" style="background: #cc3333;">重置</div>
+                    <span class="menu-text">重置对话</span>
+                </div>
+                <div class="menu-item" onclick="showScreen('script')">
+                    <div class="menu-icon" style="background: #3366cc;">剧本</div>
+                    <span class="menu-text">剧本设置</span>
+                </div>
+                <div class="menu-item" onclick="showScreen('location')">
+                    <div class="menu-icon" style="background: #cc6633;">位置</div>
+                    <span class="menu-text">位置管理</span>
+                </div>
+                <div class="menu-item" onclick="showScreen('health')">
+                    <div class="menu-icon" style="background: #3399cc;">状态</div>
+                    <span class="menu-text">用户状态</span>
+                </div>
+                <div class="menu-item" onclick="showScreen('call')">
+                    <div class="menu-icon" style="background: #ff9933;">通话</div>
+                    <span class="menu-text">通话管理</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="edit-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('main')">< 返回</button>
+                <div class="header-title">魔法王国</div>
+                <button class="header-btn" style="font-size: 16px;">⋯</button>
+            </div>
+            <div class="edit-content">
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">世界名称</div>
+                    <input class="edit-input" value="魔法王国">
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">背景设定</div>
+                    <textarea class="edit-input" rows="4">一个充满魔法与奇迹的奇幻世界，有着悠久的历史和神秘的传说...</textarea>
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">世界地图</div>
+                    <div class="edit-map">点击上传地图图片</div>
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">管理</div>
+                    <div class="manage-item" onclick="showScreen('char-manage')">
+                        <span>角色管理</span>
+                        <span class="arrow">></span>
+                    </div>
+                    <div class="manage-item" onclick="showScreen('loc-manage')">
+                        <span>位置管理</span>
+                        <span class="arrow">></span>
+                    </div>
+                    <div class="manage-item" onclick="showScreen('memory')">
+                        <span>世界记忆</span>
+                        <span class="arrow">></span>
+                    </div>
+                </div>
+            </div>
+            <button class="save-btn" onclick="showToast('保存成功')">保存</button>
+        </div>
+
+        <div class="screen" id="location-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('menu')">< 返回</button>
+                <div class="header-title">位置转换</div>
+                <div style="width: 70px;"></div>
+            </div>
+            <div class="location-content">
+                <div class="location-section">
+                    <div class="edit-label" style="font-size: 11px;">选择移动角色:</div>
+                    <select class="location-spinner">
+                        <option>艾莉丝 (当前位置: 王都)</option>
+                        <option>卡尔 (当前位置: 商业街)</option>
+                        <option>梅林 (当前位置: 魔法学院)</option>
+                    </select>
+                </div>
+                <div class="location-section">
+                    <div class="edit-label" style="font-size: 11px;">选择一级位置:</div>
+                    <select class="location-spinner">
+                        <option>王都</option>
+                        <option>森林</option>
+                        <option>山脉</option>
+                    </select>
+                </div>
+                <div class="location-section">
+                    <div class="edit-label" style="font-size: 11px;">选择二级位置:</div>
+                    <select class="location-spinner">
+                        <option>魔法学院</option>
+                        <option>商业街</option>
+                        <option>王城</option>
+                    </select>
+                </div>
+                <button class="move-btn" onclick="showToast('位置已更新')">确认移动</button>
+            </div>
+        </div>
+
+        <div class="screen" id="call-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('menu')">< 返回</button>
+                <div class="header-title">通话管理</div>
+                <div style="width: 70px;"></div>
+            </div>
+            <div class="call-list">
+                <div class="edit-label" style="padding: 6px 0; font-size: 11px;">当前通话</div>
+                <div class="call-card">
+                    <div class="call-header">
+                        <div class="call-avatar">卡</div>
+                        <div class="call-info">
+                            <h4>卡尔</h4>
+                            <p>📍 商业街 | 通话中</p>
+                        </div>
+                    </div>
+                    <div class="call-actions">
+                        <button class="call-btn end">结束通话</button>
+                    </div>
+                </div>
+                
+                <div class="edit-label" style="padding: 12px 0 6px; font-size: 11px;">来电请求</div>
+                <div class="call-card">
+                    <div class="call-header">
+                        <div class="call-avatar">莉</div>
+                        <div class="call-info">
+                            <h4>莉娜</h4>
+                            <p>📍 森林 | 正在呼叫...</p>
+                        </div>
+                    </div>
+                    <div class="call-actions">
+                        <button class="call-btn accept" onclick="showToast('已接听')">接听</button>
+                        <button class="call-btn reject" onclick="showToast('已拒绝')">拒绝</button>
+                    </div>
+                </div>
+
+                <div class="edit-label" style="padding: 12px 0 6px; font-size: 11px;">发起通话</div>
+                <div class="call-card">
+                    <div class="call-header">
+                        <div class="avatar" style="width: 40px; height: 40px; font-size: 16px;">梅</div>
+                        <div class="call-info">
+                            <h4>梅林</h4>
+                            <p>📍 魔法学院 | 空闲</p>
+                        </div>
+                    </div>
+                    <div class="call-actions">
+                        <button class="call-btn accept" onclick="showToast('正在呼叫...')">呼叫</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="settings-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('main')">< 返回</button>
+                <div class="header-title">API设置</div>
+                <div style="width: 70px;"></div>
+            </div>
+            <div class="location-content">
+                <div class="edit-label">API 1 (对话生成)</div>
+                <div class="location-section">
+                    <input class="edit-input" type="password" placeholder="API Key" style="margin-bottom: 6px;">
+                    <input class="edit-input" placeholder="Model (默认: ep-m-20260305201046-cbwgl)">
+                </div>
+                <div class="edit-label" style="margin-top: 12px;">API 2 (记忆提取)</div>
+                <div class="location-section">
+                    <input class="edit-input" type="password" placeholder="API Key" style="margin-bottom: 6px;">
+                    <input class="edit-input" placeholder="Model (默认: ep-m-20260305201046-cbwgl)">
+                </div>
+                <button class="save-btn" onclick="showToast('设置已保存')">保存设置</button>
+            </div>
+        </div>
+
+        <div class="screen" id="script-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('menu')">< 返回</button>
+                <div class="header-title">剧本设置</div>
+                <div style="width: 70px;"></div>
+            </div>
+            <div class="location-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 12px;">
+                    <span>启用剧本模式</span>
+                    <button style="padding: 6px 12px; background: #ccc; border: none; border-radius: 4px; font-size: 11px;">关</button>
+                </div>
+                <div class="edit-label">剧本大纲 (粗略描述):</div>
+                <textarea class="edit-input" rows="4" placeholder="描述剧本的粗略大纲..."></textarea>
+                <button class="save-btn" style="margin-top: 6px;">生成剧本 (API2扩写)</button>
+                <div class="edit-label" style="margin-top: 12px; font-size: 11px;">当前进度: 未启用</div>
+                <div class="edit-label" style="margin-top: 6px;">当前章节内容:</div>
+                <textarea class="edit-input" rows="6" readonly style="font-size: 11px;">暂无章节内容
+
+请先输入剧本大纲并点击"生成剧本"</textarea>
+                <div style="display: flex; gap: 6px; margin-top: 6px;">
+                    <button style="flex: 1; padding: 10px; background: #ccc; border: none; border-radius: 6px; font-size: 12px;">上一章</button>
+                    <button style="flex: 1; padding: 10px; background: #cc3333; color: white; border: none; border-radius: 6px; font-size: 12px;">下一章</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="health-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('menu')">< 返回</button>
+                <div class="header-title">用户状态</div>
+                <div style="width: 70px;"></div>
+            </div>
+            <div class="location-content">
+                <div class="edit-label">基本信息</div>
+                <div class="call-card">
+                    <p style="font-size: 12px; margin: 4px 0;"><strong>姓名:</strong> 旅行者</p>
+                    <p style="font-size: 12px; margin: 4px 0;"><strong>位置:</strong> 王都 - 魔法学院</p>
+                    <p style="font-size: 12px; margin: 4px 0;"><strong>状态:</strong> 健康</p>
+                </div>
+                <div class="edit-label" style="margin-top: 12px;">属性</div>
+                <div class="call-card">
+                    <p style="font-size: 12px; margin: 4px 0;">❤️ 生命值: 100/100</p>
+                    <p style="font-size: 12px; margin: 4px 0;">⚡ 魔力值: 80/100</p>
+                    <p style="font-size: 12px; margin: 4px 0;">💰 金币: 500</p>
+                    <p style="font-size: 12px; margin: 4px 0;">⭐ 经验: 1250</p>
+                </div>
+                <div class="edit-label" style="margin-top: 12px;">背包</div>
+                <div class="call-card">
+                    <p style="font-size: 12px; margin: 4px 0;">🗡️ 铁剑 x1</p>
+                    <p style="font-size: 12px; margin: 4px 0;">🧪 治疗药水 x3</p>
+                    <p style="font-size: 12px; margin: 4px 0;">📜 魔法卷轴 x2</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="char-manage-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('edit')">< 返回</button>
+                <div class="header-title">角色管理</div>
+                <button class="header-btn" style="font-size: 16px;" onclick="showToast('添加角色')">+</button>
+            </div>
+            <div class="call-list">
+                <div class="call-card" onclick="showScreen('char-edit')">
+                    <div class="call-header">
+                        <div class="avatar" style="width: 40px; height: 40px; font-size: 16px;">艾</div>
+                        <div class="call-info">
+                            <h4>艾莉丝</h4>
+                            <p>魔法学徒 | 王都</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="call-card" onclick="showScreen('char-edit')">
+                    <div class="call-header">
+                        <div class="avatar on-call" style="width: 40px; height: 40px; font-size: 16px;">卡</div>
+                        <div class="call-info">
+                            <h4>卡尔</h4>
+                            <p>商人 | 商业街 📞</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="call-card" onclick="showScreen('char-edit')">
+                    <div class="call-header">
+                        <div class="avatar" style="width: 40px; height: 40px; font-size: 16px;">梅</div>
+                        <div class="call-info">
+                            <h4>梅林</h4>
+                            <p>大法师 | 魔法学院</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="char-edit-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('char-manage')">< 返回</button>
+                <div class="header-title">编辑角色</div>
+                <button class="header-btn" style="color: #cc3333; font-size: 12px;">删除</button>
+            </div>
+            <div class="edit-content">
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">角色立绘</div>
+                    <div class="edit-map" style="height: 180px; background: linear-gradient(135deg, #5588ee, #3366cc); color: white; display: flex; align-items: center; justify-content: center;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 60px; margin-bottom: 8px;">🧙‍♀️</div>
+                            <div style="font-size: 11px;">点击上传立绘图片</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">角色头像</div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="avatar" style="width: 50px; height: 50px; font-size: 20px;">艾</div>
+                        <button style="padding: 6px 12px; background: #f0f0f0; border: none; border-radius: 6px; font-size: 11px; cursor: pointer;">更换头像</button>
+                    </div>
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">角色名称</div>
+                    <input class="edit-input" value="艾莉丝">
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">角色身份</div>
+                    <input class="edit-input" value="魔法学徒">
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">当前位置</div>
+                    <select class="location-spinner">
+                        <option>王都 - 魔法学院</option>
+                        <option>王都 - 商业街</option>
+                        <option>森林 - 精灵村落</option>
+                    </select>
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">角色设定</div>
+                    <textarea class="edit-input" rows="4">一位年轻的魔法学徒，性格开朗活泼，对魔法充满热情...</textarea>
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">活跃度</div>
+                    <input type="range" style="width: 100%;" value="80">
+                    <div style="text-align: center; font-size: 11px; color: #666;">80</div>
+                </div>
+            </div>
+            <button class="save-btn" onclick="showToast('保存成功')">保存</button>
+        </div>
+
+        <div class="screen" id="loc-manage-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('edit')">< 返回</button>
+                <div class="header-title">位置管理</div>
+                <button class="header-btn" style="font-size: 16px;" onclick="showToast('添加位置')">+</button>
+            </div>
+            <div class="call-list">
+                <div class="call-card" onclick="showScreen('loc-edit')" style="cursor: pointer;">
+                    <div class="call-header">
+                        <div style="font-size: 24px;">🏰</div>
+                        <div class="call-info">
+                            <h4>王都</h4>
+                            <p>一级位置 | 包含3个子位置</p>
+                        </div>
+                    </div>
+                    <div style="padding-left: 34px; font-size: 11px; color: #666;">
+                        <p style="margin: 2px 0;" onclick="event.stopPropagation(); showScreen('loc-edit')">├ 魔法学院</p>
+                        <p style="margin: 2px 0;" onclick="event.stopPropagation(); showScreen('loc-edit')">├ 商业街</p>
+                        <p style="margin: 2px 0;" onclick="event.stopPropagation(); showScreen('loc-edit')">└ 王城</p>
+                    </div>
+                </div>
+                <div class="call-card" onclick="showScreen('loc-edit')" style="cursor: pointer;">
+                    <div class="call-header">
+                        <div style="font-size: 24px;">🌲</div>
+                        <div class="call-info">
+                            <h4>森林</h4>
+                            <p>一级位置 | 包含2个子位置</p>
+                        </div>
+                    </div>
+                    <div style="padding-left: 34px; font-size: 11px; color: #666;">
+                        <p style="margin: 2px 0;" onclick="event.stopPropagation(); showScreen('loc-edit')">├ 精灵村落</p>
+                        <p style="margin: 2px 0;" onclick="event.stopPropagation(); showScreen('loc-edit')">└ 古老遗迹</p>
+                    </div>
+                </div>
+                <div class="call-card" onclick="showScreen('loc-edit')" style="cursor: pointer;">
+                    <div class="call-header">
+                        <div style="font-size: 24px;">⛰️</div>
+                        <div class="call-info">
+                            <h4>山脉</h4>
+                            <p>一级位置 | 包含1个子位置</p>
+                        </div>
+                    </div>
+                    <div style="padding-left: 34px; font-size: 11px; color: #666;">
+                        <p style="margin: 2px 0;" onclick="event.stopPropagation(); showScreen('loc-edit')">└ 龙之巢穴</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="loc-edit-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('loc-manage')">< 返回</button>
+                <div class="header-title">编辑位置</div>
+                <button class="header-btn" style="color: #cc3333; font-size: 12px;">删除</button>
+            </div>
+            <div class="edit-content">
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">位置名称</div>
+                    <input class="edit-input" value="王都">
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">位置类型</div>
+                    <select class="location-spinner">
+                        <option>一级位置</option>
+                        <option>二级位置</option>
+                    </select>
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">父级位置</div>
+                    <select class="location-spinner">
+                        <option>无 (顶级位置)</option>
+                        <option>王都</option>
+                        <option>森林</option>
+                    </select>
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">位置背景图</div>
+                    <div class="edit-map" style="height: 120px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 40px; margin-bottom: 8px;">🏰</div>
+                            <div style="font-size: 11px;">点击更换背景图</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">位置描述</div>
+                    <textarea class="edit-input" rows="3">繁华的王都，是整个王国的政治和经济中心...</textarea>
+                </div>
+                <div class="edit-section">
+                    <div class="edit-label" style="font-size: 11px;">关联角色</div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                        <span style="background: #e8f0fe; color: #3366cc; padding: 4px 10px; border-radius: 12px; font-size: 11px;">艾莉丝</span>
+                        <span style="background: #e8f0fe; color: #3366cc; padding: 4px 10px; border-radius: 12px; font-size: 11px;">梅林</span>
+                        <span style="background: #f0f0f0; color: #666; padding: 4px 10px; border-radius: 12px; font-size: 11px;">+ 添加</span>
+                    </div>
+                </div>
+            </div>
+            <button class="save-btn" onclick="showToast('保存成功')">保存</button>
+        </div>
+
+        <div class="screen" id="memory-screen">
+            <div class="header">
+                <button class="header-btn" onclick="showScreen('edit')">< 返回</button>
+                <div class="header-title">世界记忆</div>
+                <button class="header-btn" style="font-size: 16px;" onclick="showToast('添加记忆')">+</button>
+            </div>
+            <div class="call-list">
+                <div class="call-card">
+                    <div class="call-info">
+                        <h4 style="font-size: 12px;">主角在魔法学院完成了入学测试</h4>
+                        <p style="font-size: 10px; color: #999; margin-top: 4px;">2024-01-01 08:30 | 重要度: 高</p>
+                    </div>
+                </div>
+                <div class="call-card">
+                    <div class="call-info">
+                        <h4 style="font-size: 12px;">艾莉丝与主角成为了朋友</h4>
+                        <p style="font-size: 10px; color: #999; margin-top: 4px;">2024-01-01 09:15 | 重要度: 中</p>
+                    </div>
+                </div>
+                <div class="call-card">
+                    <div class="call-info">
+                        <h4 style="font-size: 12px;">卡尔在商业街经营着一家魔法道具店</h4>
+                        <p style="font-size: 10px; color: #999; margin-top: 4px;">2024-01-01 10:00 | 重要度: 低</p>
+                    </div>
+                </div>
+                <div class="call-card">
+                    <div class="call-info">
+                        <h4 style="font-size: 12px;">梅林是魔法学院的院长，掌握着古老的秘密</h4>
+                        <p style="font-size: 10px; color: #999; margin-top: 4px;">世界设定 | 重要度: 高</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast" id="toast">消息提示</div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId + '-screen').classList.add('active');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        let longPressTimer = null;
+
+        function startLongPress(callback) {
+            longPressTimer = setTimeout(() => {
+                longPressTimer = null;
+                callback();
+            }, 500);
+        }
+
+        function cancelLongPress() {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+        }
+
+        function endLongPress(clickCallback) {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+                if (clickCallback) clickCallback();
+            }
+        }
+
+        document.querySelectorAll('.world-card').forEach(card => {
+            card.addEventListener('mousedown', () => startLongPress(() => showScreen('edit')));
+            card.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                startLongPress(() => showScreen('edit'));
+            });
+            card.addEventListener('mouseup', () => endLongPress(() => showScreen('game')));
+            card.addEventListener('touchend', () => endLongPress(() => showScreen('game')));
+            card.addEventListener('mouseleave', cancelLongPress);
+            card.addEventListener('touchcancel', cancelLongPress);
+        });
+
+        document.querySelectorAll('.avatar').forEach(avatar => {
+            avatar.addEventListener('mousedown', () => startLongPress(() => showToast('进入角色编辑界面')));
+            avatar.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                startLongPress(() => showToast('进入角色编辑界面'));
+            });
+            avatar.addEventListener('mouseup', () => endLongPress(() => showScreen('health')));
+            avatar.addEventListener('touchend', () => endLongPress(() => showScreen('health')));
+            avatar.addEventListener('mouseleave', cancelLongPress);
+            avatar.addEventListener('touchcancel', cancelLongPress);
+        });
+    </script>
+</body>
+</html>
