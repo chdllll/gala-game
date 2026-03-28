@@ -7,7 +7,7 @@ source.dir = .
 source.include_exts = py,png,jpg,jpeg,gif,bmp,kv,atlas,db,json,ttf,otf,txt
 source.exclude_exts = spec,pyc,pyo,md
 version = 1.0.0
-requirements = python3,kivy,pillow,aiohttp,async_timeout,aiohappyeyeballs,aiosignal,attrs,frozenlist,multidict,propcache,yarl,idna,charset_normalizer,android,pyjnius,openssl
+requirements = python3,kivy,pillow,aiohttp,async_timeout,aiohappyeyeballs,aiosignal,attrs,frozenlist,multidict,propcache,yarl,idna,chardet,android,pyjnius,openssl
 orientation = portrait
 fullscreen = 0
 
