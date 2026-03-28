@@ -62,7 +62,7 @@ chaquopy {
             install("aiosignal==1.3.1")
             install("attrs==23.2.0")
             install("frozenlist==1.4.1")
-            install("multidict==6.0.4")
+            install("multidict==6.0.5")
             install("propcache==0.2.0")
             install("yarl==1.9.4")
             install("idna==3.6")
