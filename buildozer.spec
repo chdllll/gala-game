@@ -7,7 +7,7 @@ source.dir = .
 source.include_exts = py,png,jpg,jpeg,gif,bmp,kv,atlas,db,json,ttf,otf,txt
 source.exclude_exts = spec,pyc,pyo,md
 version = 1.0.0
-requirements = python3,kivy,pillow,android,pyjnius,openssl
+requirements = python3,kivy,pillow,aiohttp,multidict,yarl,attrs,frozenlist,aiosignal,propcache,async_timeout,aiohappyeyeballs,idna,android,pyjnius,openssl
 orientation = portrait
 fullscreen = 0
 
@@ -20,6 +20,8 @@ android.minapi = 21
 android.allow_backup = False
 android.windowsoftinputmode = adjustResize
 android.skip_update = False
+
+android.p4a_whitelist = lib/python*/site-packages/aiohttp/*.so,lib/python*/site-packages/multidict/*.so,lib/python*/site-packages/yarl/*.so,lib/python*/site-packages/frozenlist/*.so,lib/python*/site-packages/propcache/*.so,lib/python*/site-packages/aiosignal/*.so,lib/python*/site-packages/aiohappyeyeballs/*.so
 
 p4a.bootstrap = sdl2
 p4a.branch = master
