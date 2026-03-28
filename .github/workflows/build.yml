@@ -22,9 +22,8 @@ jobs:
     
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
-    
-    - name: Make gradlew executable
-      run: chmod +x android-app/gradlew
+      with:
+        gradle-version: '8.2'
     
     - name: Create release keystore
       working-directory: android-app/app
@@ -33,7 +32,7 @@ jobs:
     
     - name: Build APK
       working-directory: android-app
-      run: ./gradlew assembleRelease --no-daemon
+      run: gradle assembleRelease --no-daemon
     
     - uses: actions/upload-artifact@v7
       with:
