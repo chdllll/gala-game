@@ -57,8 +57,6 @@ chaquopy {
     defaultConfig {
         version = "3.10"
 
-        buildPython("py", "-3.10")
-
         pip {
             install("aiohttp==3.9.1")
             install("aiosignal==1.3.1")
