@@ -20,29 +20,19 @@ jobs:
       with:
         python-version: '3.10'
     
-    - name: Install system dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y autoconf libtool pkg-config libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev automake zip unzip libltdl-dev libffi-dev
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
     
-    - name: Install Python dependencies
+    - name: Create release keystore
+      working-directory: android-app/app
       run: |
-        pip install buildozer cython==0.29.36
-    
-    - name: Cache buildozer
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.buildozer
-          .buildozer
-        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
-        restore-keys: |
-          ${{ runner.os }}-buildozer-
+        keytool -genkeypair -v -keystore release.keystore -alias release -keyalg RSA -keysize 2048 -validity 10000 -storepass gala2024 -keypass gala2024 -dname "CN=Gala Game, OU=Development, O=Gala, L=Beijing, ST=Beijing, C=CN"
     
     - name: Build APK
-      run: buildozer android debug
+      working-directory: android-app
+      run: ./gradlew assembleRelease --no-daemon
     
     - uses: actions/upload-artifact@v7
       with:
         name: apk
-        path: bin/*.apk
+        path: android-app/app/build/outputs/apk/release/*.apk
